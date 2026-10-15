@@ -1,0 +1,55 @@
+plugins {
+    id "com.android.application"
+}
+
+// The address of the LexDesk web app. Today: the office PC on the Wi-Fi.
+// When LexDesk is online, change this to the firm's https address and rebuild,
+// or change it inside the app from the "cannot connect" screen.
+def serverUrl = project.findProperty("lexdeskServer") ?: "http://192.168.1.64:3000"
+
+android {
+    namespace "com.lexdesk.app"
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.lexdesk.app"
+        minSdk 29
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "String", "SERVER_URL", "\"${serverUrl}\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    // Release signing: create keystore.properties next to this project (see
+    // README.md). Never commit it or the keystore; losing them means the app
+    // can no longer be updated on the Play Store.
+    def keystoreFile = rootProject.file("keystore.properties")
+    signingConfigs {
+        if (keystoreFile.exists()) {
+            release {
+                def props = new Properties()
+                keystoreFile.withInputStream { props.load(it) }
+                storeFile file(props["storeFile"])
+                storePassword props["storePassword"]
+                keyAlias props["keyAlias"]
+                keyPassword props["keyPassword"]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (keystoreFile.exists()) signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

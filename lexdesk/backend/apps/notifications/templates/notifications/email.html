@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>{{ subject }}</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f2ee;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1d1b18;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:10px;border:1px solid #e4e0d8;">
+        <tr>
+          <td style="padding:20px 28px;border-bottom:1px solid #eeeae3;">
+            <span style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6b5f4b;">{{ firm }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 28px 8px;">
+            <h1 style="margin:0 0 18px;font-size:20px;line-height:1.35;font-weight:600;color:#1d1b18;">{{ subject }}</h1>
+            {% for paragraph in paragraphs %}
+              <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#33302b;">{{ paragraph|linebreaksbr }}</p>
+            {% endfor %}
+          </td>
+        </tr>
+        {% if action_url %}
+        <tr>
+          <td style="padding:4px 28px 24px;">
+            <a href="{{ action_url }}" style="display:inline-block;background:#1f3a5f;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:12px 22px;border-radius:6px;">Open in LexDesk</a>
+          </td>
+        </tr>
+        {% endif %}
+        {% if has_invite %}
+        <tr>
+          <td style="padding:0 28px 24px;font-size:13px;line-height:1.5;color:#6b665d;">
+            A calendar invitation is attached. Open it to add this to your phone or computer calendar.
+          </td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td style="padding:16px 28px;border-top:1px solid #eeeae3;font-size:12px;line-height:1.5;color:#8a847a;">
+            Sent by LexDesk for {{ firm }}. This message may contain privileged and confidential information. If it reached you by mistake, please delete it and let us know.
+            You can choose how you are notified under Settings &rsaquo; Notifications.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

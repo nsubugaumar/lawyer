@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The scales of justice in brass, drawn from the website's icon (512 grid)
+     and scaled into the centre of the adaptive-icon safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:translateX="18.9" android:translateY="19.6" android:scaleX="0.137" android:scaleY="0.137">
+        <path
+            android:strokeColor="#C9A463"
+            android:strokeWidth="20"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:fillColor="#00000000"
+            android:pathData="M256,120v272M186,392h140M146,176h220M256,140l-110,36M256,140l110,36M146,176l-36,96a40,40 0,0 0,72 0zM366,176l-36,96a40,40 0,0 0,72 0z" />
+        <path android:fillColor="#C9A463" android:pathData="M242,124a14,14 0,1 0,28 0a14,14 0,1 0,-28 0z" />
+    </group>
+</vector>

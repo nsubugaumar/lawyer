@@ -1,0 +1,38 @@
+# Dependencies and builds
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.venv/
+__pycache__/
+*.pyc
+staticfiles/
+
+# Data: never in git (demo database, encrypted document vault, backups)
+*.sqlite3
+vault/
+.test-vault/
+*.dump
+
+# Secrets
+.env
+.env.*
+!.env.example
+keystore.properties
+*.jks
+*.keystore
+
+# Android build output
+mobile-android/build/
+mobile-android/app/build/
+mobile-android/.gradle/
+mobile-android/local.properties
+*.apk
+*.aab
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

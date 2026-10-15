@@ -1,0 +1,20 @@
+{
+  "name": "LexDesk",
+  "short_name": "LexDesk",
+  "description": "Your firm's court diary, matters, appointments and documents, in your pocket.",
+  "start_url": "/dashboard?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f4ee",
+  "theme_color": "#12294f",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Court diary", "url": "/diary", "icons": [{ "src": "/icon.svg", "sizes": "any" }] },
+    { "name": "Appointments", "url": "/appointments", "icons": [{ "src": "/icon.svg", "sizes": "any" }] }
+  ]
+}

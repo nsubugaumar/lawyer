@@ -1,0 +1,51 @@
+# The https front door.
+#
+# Certificates are issued automatically, including for each firm's own
+# domain, but only after the API confirms the domain belongs to an active
+# firm (on-demand TLS with an "ask" check), so nobody can point a random
+# domain at the server and make it request certificates.
+
+{
+	email {$LEXDESK_ADMIN_EMAIL}
+	on_demand_tls {
+		ask http://api:8000/api/v1/firm/tls-ask/
+	}
+}
+
+(lexdesk) {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "same-origin"
+		-Server
+	}
+
+	# The office admin site and its static files are served by the API.
+	@admin path /lexdesk-office-admin/* /static/*
+	reverse_proxy @admin api:8000
+
+	# Uploads are capped by the app at 50 MB; allow a little headroom.
+	request_body {
+		max_size 60MB
+	}
+
+	# Everything else: website, web app, and /api (proxied on by the web app).
+	reverse_proxy web:3000 {
+		header_up X-Real-IP {remote_host}
+	}
+}
+
+# The platform itself: lexdesk.example, www.lexdesk.example
+{$LEXDESK_BASE_DOMAIN}, www.{$LEXDESK_BASE_DOMAIN} {
+	import lexdesk
+}
+
+# Every firm's own address: a sub-domain, or the firm's own domain.
+https:// {
+	tls {
+		on_demand
+	}
+	import lexdesk
+}

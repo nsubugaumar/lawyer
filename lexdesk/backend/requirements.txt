@@ -1,0 +1,21 @@
+# Core framework
+Django>=5.2,<7.0
+djangorestframework>=3.16
+djangorestframework-simplejwt[crypto]>=5.5
+django-cors-headers>=4.9
+django-filter>=25.1
+drf-spectacular>=0.28
+
+# Security
+argon2-cffi>=23.1          # memory-hard password hashing (OWASP first choice)
+pyotp>=2.9                 # TOTP two-factor authentication
+cryptography>=46.0         # AES-256-GCM document encryption, Fernet field encryption
+
+# Infrastructure
+psycopg[binary]>=3.2       # PostgreSQL driver (production database)
+celery>=5.5                # background jobs: reminders, OCR, emails
+redis>=5.2
+django-storages[s3]>=1.14  # encrypted blobs go to S3-compatible storage in production
+gunicorn>=23.0
+whitenoise>=6.8
+pypdf==5.4.0          # read text from PDFs for document search
