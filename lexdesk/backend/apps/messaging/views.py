@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.audit.services import record
+from apps.core.ids import as_uuid
 from apps.matters.models import Matter
 from apps.notifications.models import Category
 from apps.notifications.services import notify
@@ -35,6 +36,7 @@ def conversations_for(user):
 
 
 def _matter(user, matter_id):
+    matter_id = as_uuid(matter_id)
     matter = conversations_for(user).filter(pk=matter_id).first() if matter_id else None
     if matter is None:
         raise PermissionDenied("Messages on this matter are between the client and the matter team.")
@@ -108,7 +110,8 @@ class MessagesView(APIView):
             raise ValidationError({"body": "Please keep messages under 10,000 characters, or send a document."})
         document = None
         if request.data.get("document"):
-            document = matter.documents.filter(pk=request.data["document"], is_archived=False).first()
+            document_id = as_uuid(request.data["document"])
+            document = matter.documents.filter(pk=document_id, is_archived=False).first() if document_id else None
             if document is None or (user.is_client and not document.shared_with_client):
                 raise ValidationError({"document": "That document is not on this matter."})
             if not user.is_client and not document.shared_with_client:

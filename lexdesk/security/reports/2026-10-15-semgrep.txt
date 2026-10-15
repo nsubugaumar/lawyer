@@ -1,0 +1,23 @@
+                  
+                  
+┌────────────────┐
+│ 1 Code Finding │
+└────────────────┘
+                                                                  
+  [36m[22m[24m  mobile-android\app\src\main\AndroidManifest.xml[0m
+    ❯❱ [1mC.Users.user.AppData.Local.Temp.claude.C--Users-user-OneDrive-[0m    
+  [1m     lawyer.db9a8531-854a-47c3-8fd7-25fc948aa1a5.scratchpad.semgrep-[0m   
+  [1m     dl.rules.java.android.security.exported_activity.exported_activity[0m
+          [31m[1m[24m❰❰ Blocking ❱❱[0m
+          The application exports an activity. Any application on the device can launch the exported activity
+          which may compromise the integrity of your application or its data.  Ensure that any exported      
+          activities do not have privileged access to your application's control plane.                      
+          Details: https://sg.run/eNGZ                                                                       
+                                                                                                             
+           33┆ <activity
+           34┆     android:name=".MainActivity"
+           35┆     android:exported="true"
+           36┆     android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+           37┆     android:windowSoftInputMode="adjustResize">
+           38┆     <intent-filter>
+           39┆         <action android:name="android.intent.action.MAIN" />

@@ -202,7 +202,7 @@ export default function NotificationSettingsPage() {
           <div className="stack" style={{ ["--gap" as string]: "18px" }}>
             {!isClient && (
               <div className="field">
-                <span className="label">Court dates & deadlines</span>
+                <span className="label">Court dates &amp; deadlines</span>
                 <div className="chips">
                   {COURT_CHOICES.map((m) => (
                     <button key={m} className="chip" aria-pressed={draft.court_offsets.includes(m)} onClick={() => toggleOffset("court_offsets", m)}>

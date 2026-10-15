@@ -137,7 +137,11 @@ def invite(calendar_ref: str, user, *, cancelled=False) -> bytes | None:
     from apps.appointments.models import Appointment
     from apps.matters.models import CourtEvent
 
+    from apps.core.ids import as_uuid
+
     kind, _, pk = calendar_ref.partition(":")
+    if not as_uuid(pk):
+        return None
     if kind == "court_event":
         event = CourtEvent.objects.select_related("matter", "matter__lead_lawyer").filter(pk=pk).first()
         return _calendar([court_vevent(event, user, cancelled=cancelled)]) if event else None

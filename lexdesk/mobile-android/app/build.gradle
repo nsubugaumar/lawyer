@@ -18,6 +18,8 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "SERVER_URL", "\"${serverUrl}\""
+        // Release builds talk https only; debug builds may reach the office PC over Wi-Fi.
+        manifestPlaceholders = [usesCleartext: "false"]
     }
 
     buildFeatures {
@@ -42,6 +44,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders = [usesCleartext: "true"]
+        }
         release {
             minifyEnabled false
             if (keystoreFile.exists()) signingConfig signingConfigs.release

@@ -145,6 +145,13 @@ class CourtEventSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "created_at"]
 
+    def validate_next_event(self, value):
+        matter = self.initial_data.get("matter") if hasattr(self, "initial_data") else None
+        matter_id = str(getattr(self.instance, "matter_id", "") or matter or "")
+        if value is not None and str(value.matter_id) != matter_id:
+            raise serializers.ValidationError("The next date must be on the same matter.")
+        return value
+
     def validate_attendees(self, value):
         request = self.context.get("request")
         firm_id = getattr(getattr(request, "user", None), "firm_id", None)

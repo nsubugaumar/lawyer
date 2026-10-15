@@ -15,6 +15,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.audit.services import record
+from apps.core.ids import as_uuid
 from apps.core.urls_public import public_url
 from apps.firm.models import Firm
 
@@ -44,7 +45,8 @@ class NotificationViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     @action(detail=True, methods=["post"])
     def read(self, request, pk=None):
-        self.get_queryset().filter(pk=pk, read_at__isnull=True).update(read_at=timezone.now())
+        if as_uuid(pk):
+            self.get_queryset().filter(pk=pk, read_at__isnull=True).update(read_at=timezone.now())
         return Response(status=204)
 
     @action(detail=False, methods=["post"], url_path="read-all")

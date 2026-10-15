@@ -14,6 +14,7 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -55,7 +56,7 @@ def activation_link(user, purpose="activate") -> str:
 def user_from_link(uid: str, token: str) -> User | None:
     try:
         user = User.objects.get(pk=force_str(urlsafe_base64_decode(uid)))
-    except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+    except (User.DoesNotExist, ValueError, TypeError, OverflowError, DjangoValidationError):
         return None
     if not user.is_active or not activation_tokens.check_token(user, token):
         return None

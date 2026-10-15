@@ -135,7 +135,7 @@ export default function FirmSettingsPage() {
         {section === "profile" && (
           <>
             <div className="form-section" style={{ paddingTop: 0 }}>
-              <header><h3>Name & logo</h3><p>How the firm appears on the website, in emails, on WhatsApp and in the app.</p></header>
+              <header><h3>Name &amp; logo</h3><p>How the firm appears on the website, in emails, on WhatsApp and in the app.</p></header>
               <div className="stack" style={{ ["--gap" as string]: "14px" }}>
                 <Field label="Firm name" htmlFor="f-name" error={fe("name")}>
                   <input id="f-name" className="input" value={draft.name} onChange={(e) => set("name", e.target.value)} />
@@ -343,7 +343,7 @@ export default function FirmSettingsPage() {
               <OffsetChips choices={APPOINTMENT_CHOICES} value={draft.appointment_offsets} onChange={(v) => set("appointment_offsets", v)} />
             </div>
             <div className="form-section">
-              <header><h3>Quiet hours & morning agenda</h3><p>No WhatsApp messages overnight unless urgent; the day's agenda arrives before work.</p></header>
+              <header><h3>Quiet hours &amp; morning agenda</h3><p>No WhatsApp messages overnight unless urgent; the day's agenda arrives before work.</p></header>
               <div className="grid-3" style={{ gap: 14 }}>
                 <Field label="Quiet from" htmlFor="r-qs"><input id="r-qs" type="time" className="input" value={(draft.quiet_hours_start ?? "").slice(0, 5)} onChange={(e) => set("quiet_hours_start", e.target.value || null)} /></Field>
                 <Field label="Until" htmlFor="r-qe"><input id="r-qe" type="time" className="input" value={(draft.quiet_hours_end ?? "").slice(0, 5)} onChange={(e) => set("quiet_hours_end", e.target.value || null)} /></Field>

@@ -1,0 +1,109 @@
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\AndroidManifest.xml:31: Warning: Attribute enableOnBackInvokedCallback is only used in API level 33 and higher (current min is 29) [UnusedAttribute]
+        android:enableOnBackInvokedCallback="true"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedAttribute":
+   This check finds attributes set in XML files that were introduced in a
+   version newer than the oldest version targeted by your application (with
+   the minSdkVersion attribute).
+
+   This is not an error; the application will simply ignore the attribute.
+   However, if the attribute is important to the appearance or functionality
+   of your application, you should consider finding an alternative way to
+   achieve the same result with only available attributes, and then you can
+   optionally create a copy of the layout in a layout-vNN folder which will be
+   used on API NN or higher where you can take advantage of the newer
+   attribute.
+
+   Note: This check does not only apply to attributes. For example, some tags
+   can be unused too, such as the new <tag> element in layouts introduced in
+   API 21.
+
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:108: Warning: Using setJavaScriptEnabled can introduce XSS vulnerabilities into your application, review carefully [SetJavaScriptEnabled]
+        s.setJavaScriptEnabled(true);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:411: Warning: Using setJavaScriptEnabled can introduce XSS vulnerabilities into your application, review carefully [SetJavaScriptEnabled]
+        warm.getSettings().setJavaScriptEnabled(true);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetJavaScriptEnabled":
+   Your code should not invoke setJavaScriptEnabled if you are not sure that
+   your app really requires JavaScript support.
+
+   https://goo.gle/SetJavaScriptEnabled
+   https://developer.android.com/training/articles/security-tips
+
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\debug\res\xml\network_security_config.xml:4: Warning: Insecure Base Configuration [InsecureBaseConfiguration]
+    <base-config cleartextTrafficPermitted="true">
+                                            ~~~~
+
+   Explanation for issues of type "InsecureBaseConfiguration":
+   Permitting cleartext traffic could allow eavesdroppers to intercept data
+   sent by your app, which impacts the privacy of your users. Consider only
+   allowing encrypted traffic by setting the cleartextTrafficPermitted tag to
+   false.
+
+   https://goo.gle/InsecureBaseConfiguration
+   https://developer.android.com/preview/features/security-config.html
+
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\AndroidManifest.xml:26: Warning: The attribute android:dataExtractionRules only applies for Android 12 and higher; since minSdkVersion is API 29 you should also set android:fullBackupContent [DataExtractionRules]
+        android:dataExtractionRules="@xml/data_extraction_rules"
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\res\mipmap-anydpi-v26: Warning: This folder configuration (v26) is unnecessary; minSdkVersion is 29. Merge all the resources in this folder into mipmap-anydpi. [ObsoleteSdkInt]
+
+   Explanation for issues of type "ObsoleteSdkInt":
+   This check flags version checks that are not necessary, because the
+   minSdkVersion (or surrounding known API level) is already at least as high
+   as the version checked for.
+
+   Similarly, it also looks for resources in -vNN folders, such as values-v14
+   where the version qualifier is less than or equal to the minSdkVersion,
+   where the contents should be merged into the best folder.
+
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:314: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        title.setText("We can't reach the office");
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:322: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        body.setText("Check that your phone is online. If you are testing on the office Wi-Fi, make sure the LexDesk computer is switched on.");
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:336: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        retry.setText("Try again");
+                      ~~~~~~~~~~~
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:346: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        label.setText("Server address");
+                      ~~~~~~~~~~~~~~~~
+C:\Users\user\OneDrive\lawyer\lexdesk\mobile-android\app\src\main\java\com\lexdesk\app\MainActivity.java:359: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        save.setText("Use this address");
+                     ~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 11 warnings

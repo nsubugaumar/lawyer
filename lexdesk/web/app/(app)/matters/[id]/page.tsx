@@ -177,7 +177,7 @@ function MatterDiary({ matterId }: { matterId: string }) {
   return (
     <section className="card">
       <div className="card-head">
-        <h2>Court dates & deadlines</h2>
+        <h2>Court dates &amp; deadlines</h2>
         <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}><Icon name="plus" /> Add date</button>
       </div>
       {events.loading ? <Spinner /> : !events.data?.length ? (

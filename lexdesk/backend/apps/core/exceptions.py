@@ -17,6 +17,13 @@ def exception_handler(exc, context):
     """
     response = drf_exception_handler(exc, context)
     if response is None:
+        from django.core.exceptions import ValidationError as DjangoValidationError
+        from rest_framework.response import Response
+
+        if isinstance(exc, DjangoValidationError):
+            # Malformed input that reached the database layer (a bad id, say):
+            # a clean refusal, never a crash with a stack trace.
+            return Response({"error": {"code": "invalid", "message": "That request contains an invalid value."}}, status=400)
         return None
 
     data = response.data

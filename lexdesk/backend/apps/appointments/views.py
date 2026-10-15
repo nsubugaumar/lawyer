@@ -71,6 +71,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         client = extra.get("client") or data.get("client")
         if client is None or client.firm_id != user.firm_id or data["lawyer"].firm_id != user.firm_id:
             raise ValidationError("Choose a client and lawyer from your own firm.")
+        self._check_matter(data.get("matter"), client)
         extra["firm_id"] = user.firm_id
         assert_lawyer_free(data["lawyer"], data["starts_at"], data["ends_at"])
         # Staff bookings are confirmed straight away; client requests wait for the firm.
@@ -92,6 +93,11 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         data = serializer.validated_data
         if "lawyer" in data and data["lawyer"].firm_id != user.firm_id:
             raise ValidationError({"lawyer": "Choose a lawyer from your own firm."})
+        if "client" in data and data["client"] != appointment.client:
+            # An appointment belongs to the client it was booked for.
+            raise ValidationError({"client": "To see a different client, book a new appointment."})
+        if "matter" in data:
+            self._check_matter(data["matter"], appointment.client)
         previous_start, previous_lawyer = appointment.starts_at, appointment.lawyer
         moved = any(k in data for k in ("lawyer", "starts_at", "ends_at"))
         if moved:
@@ -111,6 +117,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 elif appointment.starts_at != previous_start:
                     reminders.announce_appointment(appointment, "moved", previous_start=previous_start)
             transaction.on_commit(tell)
+
+    def _check_matter(self, matter, client):
+        if matter is not None and (matter.firm_id != self.request.user.firm_id or matter.client_id != client.pk):
+            raise ValidationError({"matter": "Choose one of this client's matters."})
 
     def _transition(self, request, to_status, allowed_from, *, client_may=False):
         appointment = self.get_object()

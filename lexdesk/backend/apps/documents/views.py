@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from apps.audit.services import record
 from apps.core.crypto import DecryptionError
+from apps.core.ids import as_uuid
 from apps.matters.access import can_see_matter, can_work_on_matter, visible_matters
 
 from .models import Document, DocumentTemplate, DocumentVersion, SignatureRequest
@@ -250,7 +251,8 @@ class DocumentTemplateViewSet(viewsets.ModelViewSet):
         from .drafting import draft_from_template
 
         template = self.get_object()
-        matter = visible_matters(request.user).filter(pk=request.data.get("matter")).first()
+        matter_id = as_uuid(request.data.get("matter"))
+        matter = visible_matters(request.user).filter(pk=matter_id).first() if matter_id else None
         if matter is None:
             raise ValidationError({"matter": "Choose one of your matters."})
         if not can_work_on_matter(request.user, matter):

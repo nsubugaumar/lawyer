@@ -13,6 +13,7 @@ from apps.accounts.models import FEE_EARNERS, SEES_ALL_MATTERS, Role
 from apps.audit.models import AuditEvent
 from apps.audit.serializers import AuditEventSerializer
 from apps.audit.services import record
+from apps.core.ids import as_uuid
 from apps.notifications import reminders
 
 from .access import can_read_privileged, can_work_on_matter, visible_matters
@@ -124,6 +125,8 @@ class MatterViewSet(viewsets.ModelViewSet):
         matter = self.get_object()
         if not can_work_on_matter(request.user, matter):
             raise PermissionDenied()
+        if as_uuid(user_id) is None:
+            raise ValidationError({"user_id": "Not a valid person."})
         if str(matter.lead_lawyer_id) == user_id:
             raise ValidationError("Assign a new lead lawyer before removing this one.")
         matter.memberships.filter(user_id=user_id).delete()

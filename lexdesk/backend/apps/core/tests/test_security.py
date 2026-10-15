@@ -490,3 +490,42 @@ class BackupAndKeyTests(VictimFirm):
         finally:
             crypto.vault_keys.cache_clear()
             shutil.rmtree(backup_dir, ignore_errors=True)
+
+
+class MalformedInputTests(VictimFirm):
+    """Found by the ZAP scan: malformed ids must be refused, never crash (5xx)."""
+
+    BAD = ["not-a-uuid", "<!--#EXEC cmd=\"dir \\\"-->", "' OR '1'='1", "../../etc/passwd", "%00", "1" * 300]
+
+    def test_bad_ids_in_paths_queries_and_bodies_never_crash(self):
+        from urllib.parse import quote
+
+        api = api_as(make_user(Role.PARTNER, firm=self.a))
+        for bad in self.BAD:
+            q = quote(bad, safe="")
+            for url in (f"/api/v1/messages/?matter={q}", f"/api/v1/notes/{q}/", f"/api/v1/matters/{q}/", f"/api/v1/documents/{q}/download/",
+                        f"/api/v1/diary/{q}/brief/", f"/api/v1/notifications/{q}/read/", f"/api/v1/matters/{self.matter.pk}/team/{q}/",
+                        f"/api/v1/billing/online-payments/{q}/", f"/api/v1/auth/activate/?uid={q}&token={q}", f"/api/v1/diary/?matter={q}",
+                        f"/api/v1/documents/?matter={q}"):
+                for method in ("get", "post", "patch", "delete"):
+                    status = getattr(api, method)(url, {"matter": bad, "document": bad, "body": "x"}, format="json").status_code
+                    self.assertLess(status, 500, f"{method.upper()} {url} -> {status}")
+            for url, body in (("/api/v1/messages/", {"matter": bad, "body": "x"}), ("/api/v1/messages/read/", {"matter": bad}),
+                              (f"/api/v1/documents/templates/{self.template.pk}/draft/", {"matter": bad})):
+                self.assertLess(api_as(self.lawyer).post(url, body, format="json").status_code, 500, url)
+
+    def test_boolean_sql_injection_probes_get_identical_answers(self):
+        """ZAP's 189 'SQL injection' alerts compared answers on changing data; on stable data they are identical."""
+        from apps.library.models import Authority
+
+        Authority.objects.create(firm=self.a, title="Second", added_by=self.lawyer)
+        api = api_as(self.lawyer)
+        for param in ("ordering", "search", "page_size", "kind"):
+            true = api.get("/api/v1/library/", {param: "title' AND '1'='1' -- "})
+            false = api.get("/api/v1/library/", {param: "title' AND '1'='2' -- "})
+            self.assertEqual(true.status_code, false.status_code, param)
+            if true.status_code == 200:
+                self.assertEqual(true.content, false.content, param)
+            else:
+                # A refused value is echoed back in the error message; nothing else differs.
+                self.assertEqual(true.status_code, 400, param)

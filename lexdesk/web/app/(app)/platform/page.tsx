@@ -47,7 +47,7 @@ export default function PlatformPage() {
 
       <div className="grid-3" style={{ marginBottom: 18, gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))" }}>
         <div className="card stat"><span className="value">{active.length}</span><span className="label">Active firms</span></div>
-        <div className="card stat"><span className="value">{active.reduce((s, f) => s + f.staff_count, 0)}</span><span className="label">Lawyers & staff</span></div>
+        <div className="card stat"><span className="value">{active.reduce((s, f) => s + f.staff_count, 0)}</span><span className="label">Lawyers &amp; staff</span></div>
         <div className="card stat"><span className="value">{active.reduce((s, f) => s + f.matter_count, 0)}</span><span className="label">Matters on file</span></div>
       </div>
 

@@ -19,15 +19,17 @@
         </intent>
     </queries>
 
-    <!-- Cleartext is allowed only so the app can reach the office PC over the
-         Wi-Fi during testing. Remove it once LexDesk runs on https. -->
+    <!-- Release builds allow https only. Debug builds (testing on the office
+         Wi-Fi) get a separate network config from src/debug. -->
     <application
         android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/LexDeskTheme"
-        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
+        android:usesCleartextTraffic="${usesCleartext}"
         android:networkSecurityConfig="@xml/network_security_config">
 
         <activity

@@ -7,3 +7,13 @@ buildscript {
         classpath "com.android.tools.build:gradle:8.12.0"
     }
 }
+
+// Build output can live outside the source folder (for example when the
+// project sits in OneDrive, which locks files while syncing them):
+//   set LEXDESK_BUILD_DIR=C:\Users\you\AppData\Local\lexdesk-build
+def externalBuild = System.getenv("LEXDESK_BUILD_DIR")
+if (externalBuild) {
+    allprojects { project ->
+        project.layout.buildDirectory = new File(externalBuild, project.name)
+    }
+}

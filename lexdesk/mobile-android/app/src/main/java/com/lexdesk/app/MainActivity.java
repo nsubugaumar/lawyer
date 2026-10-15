@@ -66,6 +66,8 @@ public class MainActivity extends Activity {
     private ProgressBar progress;
     private ValueCallback<Uri[]> pendingUpload;
     private String server;
+    // The page currently shown; the bridge answers only LexDesk's own pages.
+    private volatile String currentUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,7 @@ public class MainActivity extends Activity {
         root.addView(offline, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         setContentView(root);
+        registerBackHandling();
         root.setOnApplyWindowInsetsListener((v, insets) -> {
             v.setPadding(0, insets.getSystemWindowInsetTop(), 0, insets.getSystemWindowInsetBottom());
             return insets.consumeSystemWindowInsets();
@@ -127,7 +130,13 @@ public class MainActivity extends Activity {
             }
 
             @Override
+            public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+                currentUrl = url == null ? "" : url;
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
+                currentUrl = url == null ? "" : url;
                 CookieManager.getInstance().flush();
                 warmOfflinePage();
             }
@@ -181,13 +190,15 @@ public class MainActivity extends Activity {
     private class Bridge {
         @JavascriptInterface
         public void download(String path, String token, String filename, boolean open) {
-            if (path == null || !path.startsWith("/api/")) return; // only our own API
+            if (!fromOurPages() || !safeFile(filename)) return;
+            if (path == null || !path.startsWith("/api/") || path.contains("..")) return; // only our own API
             new Thread(() -> saveAndOpen(server + path, token, filename, open)).start();
         }
 
         /** A document saved for court, opened from the phone with no signal. */
         @JavascriptInterface
         public void openBase64(String filename, String mime, String base64) {
+            if (!fromOurPages() || !safeFile(filename) || (mime != null && mime.contains("android.package-archive"))) return;
             new Thread(() -> {
                 try {
                     byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
@@ -255,6 +266,24 @@ public class MainActivity extends Activity {
                 }
             });
         }
+    }
+
+    /** True only while one of LexDesk's own pages is showing. */
+    private boolean fromOurPages() {
+        Uri page = Uri.parse(currentUrl);
+        Uri home = Uri.parse(server);
+        return page.getHost() != null && page.getHost().equalsIgnoreCase(home.getHost()) && page.getPort() == home.getPort()
+                && page.getScheme() != null && page.getScheme().equalsIgnoreCase(home.getScheme());
+    }
+
+    /** Documents only: never app installers or scripts. */
+    private static boolean safeFile(String filename) {
+        if (filename == null) return true;
+        String lower = filename.toLowerCase(java.util.Locale.ROOT).trim();
+        for (String bad : new String[]{".apk", ".apks", ".xapk", ".dex", ".jar", ".sh", ".bat", ".exe", ".js", ".html", ".htm", ".svg"}) {
+            if (lower.endsWith(bad)) return false;
+        }
+        return true;
     }
 
     private static String safeName(String name) {
@@ -396,6 +425,24 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------- lifecycle
 
+    /**
+     * Back goes back a page inside LexDesk before leaving the app. Android 13+
+     * delivers the back gesture through OnBackInvokedDispatcher; older
+     * versions still call onBackPressed.
+     */
+    private void registerBackHandling() {
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::goBackOrLeave);
+        }
+    }
+
+    private void goBackOrLeave() {
+        if (offline.getVisibility() != View.VISIBLE && web.canGoBack()) web.goBack();
+        else finish();
+    }
+
+    @android.annotation.SuppressLint("GestureBackNavigation") // Android 12 and older only; 13+ uses registerBackHandling
     @Override
     public void onBackPressed() {
         if (offline.getVisibility() == View.VISIBLE) {

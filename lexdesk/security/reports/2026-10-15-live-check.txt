@@ -1,4 +1,4 @@
-LexDesk live security check: http://localhost:3000
+LexDesk live security check: http://127.0.0.1:3000
 
 [PASS] / answers
 [PASS] / X-Content-Type-Options nosniff
