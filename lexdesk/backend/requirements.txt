@@ -18,4 +18,4 @@ redis>=5.2
 django-storages[s3]>=1.14  # encrypted blobs go to S3-compatible storage in production
 gunicorn>=23.0
 whitenoise>=6.8
-pypdf==5.4.0          # read text from PDFs for document search
+pypdf>=6.20.1          # read text from PDFs for document search (keep current: it parses uploads)

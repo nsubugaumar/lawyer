@@ -81,7 +81,7 @@ def _ocr(content: bytes, pdf: bool = False) -> str:
             fh.write(content)
         images = [source]
         if pdf:
-            subprocess.run(["pdftoppm", "-r", "200", "-png", "-l", "30", source, f"{tmp}/page"], check=True, timeout=300)
+            subprocess.run([shutil.which("pdftoppm"), "-r", "200", "-png", "-l", "30", source, f"{tmp}/page"], check=True, timeout=300)
             import glob
 
             images = sorted(glob.glob(f"{tmp}/page*.png"))

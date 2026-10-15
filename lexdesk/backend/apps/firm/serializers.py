@@ -119,6 +119,12 @@ class FirmSettingsSerializer(serializers.ModelSerializer):
             "webhook_url": public_url(request, f"/api/v1/billing/flutterwave/webhook/{obj.slug}/") if request else "",
         }
 
+    def validate_whatsapp_phone_number_id(self, value):
+        # Becomes part of the address we call at Meta: digits only.
+        if value and not re.fullmatch(r"\d{5,30}", value.strip()):
+            raise serializers.ValidationError("The phone number ID is the long number shown in WhatsApp Manager.")
+        return value.strip()
+
     def validate_at_sender_id(self, value):
         if value and not re.fullmatch(r"[A-Za-z0-9 ]{3,11}", value):
             raise serializers.ValidationError("Sender IDs are 3 to 11 letters or digits, as approved by Africa's Talking.")

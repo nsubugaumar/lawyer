@@ -10,6 +10,14 @@ import { homeFor, useAuth } from "@/lib/auth";
 import { useFirm } from "@/lib/firm";
 import { greeting } from "@/lib/format";
 
+/** A path inside LexDesk: starts with one "/" not followed by "/" or "\", no control characters. */
+function isInAppPath(path: string) {
+  if (path.length < 1 || path[0] !== "/") return false;
+  if (path[1] === "/" || path[1] === "\\") return false;
+  for (let i = 0; i < path.length; i++) if (path.charCodeAt(i) < 32) return false;
+  return true;
+}
+
 export default function LoginPage() {
   return (
     <Suspense fallback={<Spinner />}>
@@ -33,7 +41,8 @@ function Login() {
   useEffect(() => {
     if (ready && user) {
       // Only ever follow an in-app path, never an outside address.
-      const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
+      // Browsers read "/\" like "//", so both would leave the site.
+      const safeNext = next && isInAppPath(next) ? next : null;
       router.replace(mfaSetupRequired ? "/settings/security?setup=1" : safeNext ?? homeFor(user));
     }
   }, [ready, user, next, router, mfaSetupRequired]);

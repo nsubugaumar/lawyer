@@ -14,7 +14,7 @@ RUN useradd --create-home --uid 1000 lexdesk
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY --chown=lexdesk:lexdesk . .
 RUN mkdir -p /vault /app/staticfiles && chown -R lexdesk:lexdesk /vault /app/staticfiles

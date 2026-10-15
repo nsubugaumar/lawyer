@@ -47,7 +47,7 @@ def _call(firm: Firm, method: str, path: str, payload=None) -> dict:
         method=method,
     )
     try:
-        with urllib.request.urlopen(request, timeout=20) as response:  # noqa: S310 - fixed https URL
+        with urllib.request.urlopen(request, timeout=20) as response:  # noqa: S310  # nosec B310 - fixed https URL, reviewed
             return json.loads(response.read())
     except urllib.error.HTTPError as exc:
         try:

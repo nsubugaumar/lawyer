@@ -1,0 +1,59 @@
+LexDesk live security check: http://localhost:3000
+
+[PASS] / answers
+[PASS] / X-Content-Type-Options nosniff
+[PASS] / refuses framing (clickjacking)
+[PASS] / has a Content-Security-Policy
+[PASS] / Referrer-Policy set
+[PASS] / does not advertise its server software
+[PASS] /login answers
+[PASS] /login X-Content-Type-Options nosniff
+[PASS] /login refuses framing (clickjacking)
+[PASS] /login has a Content-Security-Policy
+[PASS] /login Referrer-Policy set
+[PASS] /login does not advertise its server software
+[PASS] /api/v1/health/ answers
+[PASS] /api/v1/health/ X-Content-Type-Options nosniff
+[PASS] /api/v1/health/ refuses framing (clickjacking)
+[PASS] /api/v1/health/ has a Content-Security-Policy
+[PASS] /api/v1/health/ Referrer-Policy set
+[PASS] /api/v1/health/ does not advertise its server software
+[PASS] API responses are not cached
+[PASS] /.env not exposed
+[PASS] /.git/config not exposed
+[PASS] /db.sqlite3 not exposed
+[PASS] /backend/.env not exposed
+[PASS] /vault/ not exposed
+[PASS] /static/../config/settings.py not exposed
+[PASS] /api/v1/../../config/settings.py not exposed
+[PASS] /package.json not exposed
+[PASS] /next.config.ts not exposed
+[PASS] /.next/server/app/page.js not exposed
+[PASS] /api/v1/matters/ needs a session
+[PASS] /api/v1/clients/ needs a session
+[PASS] /api/v1/documents/ needs a session
+[PASS] /api/v1/diary/ needs a session
+[PASS] /api/v1/messages/threads/ needs a session
+[PASS] /api/v1/billing/invoices/ needs a session
+[PASS] /api/v1/auth/team/ needs a session
+[PASS] /api/v1/reports/ needs a session
+[PASS] /api/v1/audit/events/ needs a session
+[PASS] /api/v1/platform/firms/ needs a session
+[PASS] unsigned (alg=none) token refused
+[PASS] CORS does not trust other websites
+[PASS] TRACE not allowed
+[PASS] TRACK not allowed
+[PASS] no server redirect off-site: /login?next=//evil.example
+[PASS] no server redirect off-site: /login?next=https://evil.example
+[PASS] injection probe handled (' OR '1'='1)
+[PASS] injection probe handled ("; DROP TABL)
+[PASS] injection probe handled (<script>aler)
+[PASS] injection probe handled (../../../../)
+[PASS] bad input gives a clean error
+[PASS] oversized request refused
+[PASS] refresh cookie HttpOnly
+[PASS] refresh cookie SameSite=Strict
+[PASS] login is rate limited
+[PASS] unknown and wrong-password logins look the same
+
+55 passed, 0 failed

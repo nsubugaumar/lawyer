@@ -1,0 +1,151 @@
+Run started:2026-10-15 10:46:23.883931+00:00
+
+Test results:
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'That is not your current password.'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: apps\accounts\serializers.py:85:47
+84	        if not user.check_password(attrs["current_password"]):
+85	            raise serializers.ValidationError({"current_password": "That is not your current password."})
+86	        password_validation.validate_password(attrs["new_password"], user)
+
+--------------------------------------------------
+>> Issue: [B406:blacklist] Using escape to parse untrusted XML data is known to be vulnerable to XML attacks. Replace escape with the equivalent defusedxml package, or make sure defusedxml.defuse_stdlib() is called.
+   Severity: Low   Confidence: High
+   CWE: CWE-20 (https://cwe.mitre.org/data/definitions/20.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b406-import-xml-sax
+   Location: apps\core\filemakers.py:9:0
+8	import zipfile
+9	from xml.sax.saxutils import escape
+10	
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: '2000'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: apps\core\management\commands\seed_demo.py:21:16
+20	# 12-character policy; this one is set directly and never validated.
+21	DEMO_PASSWORD = "2000"
+22	
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'Correct-Horse-Battery-9'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: apps\core\testing.py:11:11
+10	
+11	PASSWORD = "Correct-Horse-Battery-9"
+12	TINY_PDF = b"%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n"
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: apps\documents\search.py:25:0
+24	import shutil
+25	import subprocess
+26	import tempfile
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: apps\documents\search.py:84:12
+83	        if pdf:
+84	            subprocess.run([shutil.which("pdftoppm"), "-r", "200", "-png", "-l", "30", source, f"{tmp}/page"], check=True, timeout=300)
+85	            import glob
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: apps\documents\search.py:90:21
+89	        for image in images:
+90	            result = subprocess.run([tesseract, image, "-", "-l", "eng"], capture_output=True, timeout=120)
+91	            text.append(result.stdout.decode("utf-8", "ignore"))
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'dev-only-insecure-key-change-me-0123456789abcdefghijklmnopqrstuvwxyz'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: config\settings.py:45:17
+44	    # Only reachable in DEBUG. Never use this outside a laptop.
+45	    SECRET_KEY = "dev-only-insecure-key-change-me-0123456789abcdefghijklmnopqrstuvwxyz"
+46	
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'True'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: config\settings.py:283:4
+282	    # Changing your password instantly kills every token issued before it.
+283	    "CHECK_REVOKE_TOKEN": True,
+284	    "REVOKE_TOKEN_CLAIM": "hash_password",
+285	}
+286	
+287	# Where the web app's refresh token cookie lives. HttpOnly so JavaScript (and
+288	# therefore any XSS) can never read it.
+289	LEXDESK_REFRESH_COOKIE = "lexdesk_refresh"
+290	LEXDESK_REFRESH_COOKIE_PATH = "/api/v1/auth/"
+291	
+292	SPECTACULAR_SETTINGS = {
+293	    "TITLE": "LexDesk API",
+294	    "DESCRIPTION": "Paperless practice management for law firms.",
+295	    "VERSION": "1.0.0",
+296	    "SERVE_INCLUDE_SCHEMA": False,
+297	    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"] if not DEBUG else [],
+298	}
+299	
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'hash_password'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: config\settings.py:284:4
+283	    "CHECK_REVOKE_TOKEN": True,
+284	    "REVOKE_TOKEN_CLAIM": "hash_password",
+285	}
+286	
+287	# Where the web app's refresh token cookie lives. HttpOnly so JavaScript (and
+288	# therefore any XSS) can never read it.
+289	LEXDESK_REFRESH_COOKIE = "lexdesk_refresh"
+290	LEXDESK_REFRESH_COOKIE_PATH = "/api/v1/auth/"
+291	
+292	SPECTACULAR_SETTINGS = {
+293	    "TITLE": "LexDesk API",
+294	    "DESCRIPTION": "Paperless practice management for law firms.",
+295	    "VERSION": "1.0.0",
+296	    "SERVE_INCLUDE_SCHEMA": False,
+297	    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"] if not DEBUG else [],
+298	}
+299	
+300	# Rate limits are counted in the cache. Redis in production so every server
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 7665
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 3
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 10
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 6
+		High: 4
+Files skipped (0):

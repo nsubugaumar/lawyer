@@ -171,7 +171,7 @@ def send_whatsapp(*, to: str, headline: str, details: str, firm: Firm, link: str
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=15) as response:  # noqa: S310 - fixed https URL
+        with urllib.request.urlopen(request, timeout=15) as response:  # noqa: S310  # nosec B310 - fixed https URL, reviewed
             data = json.loads(response.read())
     except urllib.error.HTTPError as exc:
         try:
@@ -222,7 +222,7 @@ def send_sms(*, to: str, text: str, firm: Firm) -> str:
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=15) as response:  # noqa: S310 - fixed https URL
+        with urllib.request.urlopen(request, timeout=15) as response:  # noqa: S310  # nosec B310 - fixed https URL, reviewed
             data = json.loads(response.read())
     except urllib.error.HTTPError as exc:
         detail = f"SMS gateway HTTP {exc.code}"
