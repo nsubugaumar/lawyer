@@ -27,4 +27,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD curl -fsS http://127.0.0.1:8000/api/v1/health/ || exit 1
 
 # Migrations run once, from the api container, before it starts serving.
-CMD ["sh", "-c", "python manage.py migrate --noinput && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS:-3} --timeout 120 --access-logfile -"]
+# LEXDESK_SEED_DEMO=1 adds the demo firms (demo servers only, never a real one).
+CMD ["sh", "-c", "python manage.py migrate --noinput && if [ \"$LEXDESK_SEED_DEMO\" = 1 ]; then python manage.py seed_demo --demo-server; fi && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS:-3} --timeout 120 --access-logfile -"]

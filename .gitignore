@@ -18,6 +18,7 @@ vault/
 .env
 .env.*
 !.env.example
+render-keys.txt
 keystore.properties
 *.jks
 *.keystore

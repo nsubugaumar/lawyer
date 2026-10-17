@@ -45,8 +45,14 @@ def pdf(text: str) -> bytes:
 class Command(BaseCommand):
     help = "Fill a development database with a believable small firm. Refuses to run in production."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--demo-server", action="store_true",
+            help="Allow seeding a server that runs in production mode. Only for a demo server with no real firm on it.",
+        )
+
     def handle(self, *args, **options):
-        if not settings.DEBUG:
+        if not settings.DEBUG and not options["demo_server"]:
             raise CommandError("seed_demo only runs with LEXDESK_DEBUG=1. Never seed a real firm's database.")
         with transaction.atomic():
             if User.objects.filter(email="admin@demo.lexdesk").exists():
