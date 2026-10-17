@@ -22,9 +22,11 @@ services:
     runtime: docker
     plan: free
     region: frankfurt
-    rootDir: lexdesk/backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    # Paths from the top of the repository.
+    dockerfilePath: ./lexdesk/backend/Dockerfile
+    dockerContext: ./lexdesk/backend
+    buildFilter:
+      paths: ["lexdesk/backend/**"]
     envVars:
       - key: PORT
         value: "8000"
@@ -80,9 +82,10 @@ services:
     runtime: docker
     plan: free
     region: frankfurt
-    rootDir: lexdesk/web
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./lexdesk/web/Dockerfile
+    dockerContext: ./lexdesk/web
+    buildFilter:
+      paths: ["lexdesk/web/**"]
     envVars:
       # The API service's address, e.g. https://lexdesk-api.onrender.com
       # Used when the app is built, so redeploy the web service after changing it.
