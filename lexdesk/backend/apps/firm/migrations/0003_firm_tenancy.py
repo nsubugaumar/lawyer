@@ -30,7 +30,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RenameModel("FirmSettings", "Firm"),
         migrations.AlterModelOptions(name="firm", options={"ordering": ["name"]}),
-        migrations.AddField("firm", "slug", models.SlugField(max_length=60, null=True)),
+        # No index yet: the unique index below brings it. Indexing here too makes
+        # PostgreSQL create the same "_like" index twice and the migration fail.
+        migrations.AddField("firm", "slug", models.SlugField(max_length=60, null=True, db_index=False)),
         migrations.AddField("firm", "code", models.CharField(max_length=6, null=True)),
         migrations.AddField("firm", "domain", models.CharField(blank=True, max_length=200, help_text="The firm's own website domain, if any, e.g. www.nsc-advocates.co.ug")),
         migrations.AddField("firm", "is_active", models.BooleanField(default=True, help_text="A suspended firm cannot sign in")),
