@@ -1,0 +1,90 @@
+# LexDesk on Render's free tier: for TESTING only, not real client work.
+#
+# Render dashboard > New > Blueprint > pick this repository. Render then asks
+# for every value marked `sync: false`; see lexdesk/deploy/RENDER.md.
+#
+# What the free tier cannot do (fine for testing):
+#   - the database is deleted 30 days after it is created
+#   - uploaded documents are lost whenever a service sleeps or redeploys
+#   - no worker or scheduler, so timed reminders and morning agendas do not run
+#   - services sleep after 15 idle minutes; the first visit takes about a minute
+
+databases:
+  - name: lexdesk-db
+    plan: free
+    region: frankfurt
+    databaseName: lexdesk
+    user: lexdesk
+
+services:
+  - type: web
+    name: lexdesk-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: lexdesk/backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: PORT
+        value: "8000"
+      - key: LEXDESK_DEBUG
+        value: "0"
+      - key: POSTGRES_HOST
+        fromDatabase: { name: lexdesk-db, property: host }
+      - key: POSTGRES_PORT
+        fromDatabase: { name: lexdesk-db, property: port }
+      - key: POSTGRES_DB
+        fromDatabase: { name: lexdesk-db, property: database }
+      - key: POSTGRES_USER
+        fromDatabase: { name: lexdesk-db, property: user }
+      - key: POSTGRES_PASSWORD
+        fromDatabase: { name: lexdesk-db, property: password }
+      # Emails run inside the request; there is no worker on the free tier.
+      - key: CELERY_TASK_ALWAYS_EAGER
+        value: "1"
+      # Activation and reset emails are printed in the API's Logs tab.
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.console.EmailBackend
+      - key: LEXDESK_WHATSAPP_BACKEND
+        value: console
+      - key: LEXDESK_SMS_BACKEND
+        value: console
+      - key: LEXDESK_TRUST_X_FORWARDED_FOR
+        value: "1"
+      - key: GUNICORN_WORKERS
+        value: "2"
+      - key: LEXDESK_TIME_ZONE
+        value: Africa/Kampala
+      - key: LEXDESK_ALLOW_FIRM_SIGNUP
+        value: "1"
+      # The web service's address, e.g. https://lexdesk-web.onrender.com
+      - key: LEXDESK_WEB_URL
+        sync: false
+      - key: LEXDESK_CORS_ORIGINS
+        sync: false
+      # From: python lexdesk/deploy/generate_keys.py
+      - key: LEXDESK_SECRET_KEY
+        sync: false
+      - key: LEXDESK_JWT_SIGNING_KEY
+        sync: false
+      - key: LEXDESK_VAULT_KEYS
+        sync: false
+      - key: LEXDESK_FIELD_KEYS
+        sync: false
+      - key: LEXDESK_SEARCH_KEY
+        sync: false
+
+  - type: web
+    name: lexdesk-web
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: lexdesk/web
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      # The API service's address, e.g. https://lexdesk-api.onrender.com
+      # Used when the app is built, so redeploy the web service after changing it.
+      - key: LEXDESK_API_ORIGIN
+        sync: false

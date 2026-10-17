@@ -45,6 +45,9 @@ if not SECRET_KEY:
     SECRET_KEY = "dev-only-insecure-key-change-me-0123456789abcdefghijklmnopqrstuvwxyz"
 
 ALLOWED_HOSTS = env_list("LEXDESK_ALLOWED_HOSTS", "localhost,127.0.0.1" if DEBUG else "")
+# Render tells each service its own public address (e.g. lexdesk-api.onrender.com).
+if env("RENDER_EXTERNAL_HOSTNAME"):
+    ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
 
 INSTALLED_APPS = [
     "django.contrib.admin",
