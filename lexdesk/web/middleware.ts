@@ -8,9 +8,13 @@ import { type NextRequest, NextResponse } from "next/server";
  */
 export function middleware(request: NextRequest) {
   const nonce = btoa(crypto.randomUUID());
+  // The development server (npm run dev) needs eval for React's debugging
+  // tools; without it no script runs and nobody can sign in. Production
+  // builds never get it.
+  const devEval = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${devEval}`,
     // React style attributes need inline styles; they cannot run code.
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
